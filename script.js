@@ -19,10 +19,9 @@ const toast = document.getElementById('toast');
 let modalCallback = null;
 let currentEditIndex = null;
 
-// Data awal
+// Ambil data dari localStorage
 let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 let currentFilter = 'all';
-
 
 // Render semua tugas
 function renderTasks() {
@@ -36,7 +35,7 @@ function renderTasks() {
 
   filtered.forEach((task, index) => {
     const li = document.createElement('li');
-    li.className = 'flex justify-between items-center bg-gray-100 dark:bg-gray-700 p-3 rounded-xl transition-all duration-300';
+    li.className = 'flex justify-between items-center bg-gray-100 dark:bg-gray-700 p-3 rounded-xl';
 
     // Teks tugas
     const span = document.createElement('span');
@@ -50,30 +49,24 @@ function renderTasks() {
     const buttons = document.createElement('div');
     buttons.className = 'flex gap-2 items-center';
 
-    // ✅ Toggle selesai
     const doneBtn = document.createElement('button');
     doneBtn.innerHTML = task.completed ? '✅' : '⬜';
     doneBtn.title = task.completed ? 'Tandai belum selesai' : 'Tandai selesai';
     doneBtn.onclick = () => {
-      clickSound.play();
       toggleComplete(index);
     };
 
-    // ✏️ Edit
     const editBtn = document.createElement('button');
     editBtn.innerHTML = '✏️';
     editBtn.title = 'Edit';
     editBtn.onclick = () => {
-      clickSound.play();
       editTask(index);
     };
 
-    // 🗑️ Hapus
     const delBtn = document.createElement('button');
     delBtn.innerHTML = '🗑️';
     delBtn.title = 'Hapus';
     delBtn.onclick = () => {
-      clickSound.play();
       deleteTask(index);
     };
 
@@ -86,6 +79,7 @@ function renderTasks() {
     list.appendChild(li);
   });
 
+  // Simpan ke localStorage
   localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
@@ -96,18 +90,17 @@ form.onsubmit = function (e) {
   if (text !== '') {
     tasks.push({ text, completed: false });
     input.value = '';
-    clickSound.play();
     renderTasks();
   }
 };
 
-// Tandai selesai
+// Toggle selesai
 function toggleComplete(index) {
   tasks[index].completed = !tasks[index].completed;
   renderTasks();
 }
 
-// Edit tugas (pakai modal)
+// Edit tugas
 function editTask(index) {
   currentEditIndex = index;
   showModal('Edit Tugas', tasks[index].text, newText => {
@@ -119,7 +112,7 @@ function editTask(index) {
   }, false);
 }
 
-// Hapus tugas (pakai modal)
+// Hapus tugas
 function deleteTask(index) {
   showModal('Yakin ingin menghapus tugas ini?', '', () => {
     tasks.splice(index, 1);
@@ -128,38 +121,31 @@ function deleteTask(index) {
   }, true);
 }
 
-// Filter tampilan tugas
+// Filter tugas
 filterButtons.forEach(button => {
   button.onclick = () => {
     currentFilter = button.dataset.filter;
     filterButtons.forEach(btn => btn.classList.remove('font-bold', 'text-blue-600', 'dark:text-yellow-400'));
     button.classList.add('font-bold', 'text-blue-600', 'dark:text-yellow-400');
-    clickSound.play();
     renderTasks();
   };
 });
 
-// Toggle Dark Mode
+// Toggle dark mode
 toggleDark.onclick = () => {
   const html = document.documentElement;
-  if (html.classList.contains('dark')) {
-    html.classList.remove('dark');
-    toggleDark.innerHTML = '🌙 Dark Mode';
-    localStorage.setItem('darkMode', false);
-  } else {
-    html.classList.add('dark');
-    toggleDark.innerHTML = '☀️ Light Mode';
-    localStorage.setItem('darkMode', true);
-  }
+  const isDark = html.classList.toggle('dark');
+  toggleDark.innerHTML = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+  localStorage.setItem('darkMode', isDark);
 };
 
-// Aktifkan dark mode jika sebelumnya dipilih
+// Aktifkan dark mode jika tersimpan
 if (localStorage.getItem('darkMode') === 'true') {
   document.documentElement.classList.add('dark');
   toggleDark.innerHTML = '☀️ Light Mode';
 }
 
-// Modal: tampilkan
+// Tampilkan modal
 function showModal(title, defaultValue, callback, isDelete = false) {
   modal.classList.remove('hidden');
   modal.classList.add('flex');
@@ -184,7 +170,7 @@ function showModal(title, defaultValue, callback, isDelete = false) {
   }
 }
 
-// Modal: sembunyikan
+// Sembunyikan modal
 function hideModal() {
   modalContent.classList.remove('scale-100', 'opacity-100');
   setTimeout(() => {
@@ -199,12 +185,9 @@ modalOk.onclick = () => {
   hideModal();
   if (modalCallback) modalCallback(value);
 };
+modalCancel.onclick = () => hideModal();
 
-modalCancel.onclick = () => {
-  hideModal();
-};
-
-// Toast notifikasi
+// Tampilkan toast notifikasi
 function showToast(message) {
   toast.textContent = message;
   toast.classList.remove('hidden');
@@ -219,5 +202,5 @@ function showToast(message) {
   }, 2000);
 }
 
-// Pertama kali tampil
+// Tampilkan daftar tugas saat pertama kali
 renderTasks();
