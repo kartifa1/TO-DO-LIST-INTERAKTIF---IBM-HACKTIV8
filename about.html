@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id" class="">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tentang Aplikasi</title>
+    <link rel="icon" href="https://img.icons8.com/ios/50/task--v1.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        light: '#f3f4f6',
+                        dark: '#1f2937'
+                    }
+                }
+            }
+        };
+    </script>
+
+
+</head>
+
+<body
+    class="min-h-screen flex items-center justify-center bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-white transition-all duration-300">
+
+    <!-- container -->
+    <main
+        class="bg-white dark:bg-gray-800 border border-blue-300 dark:border-yellow-400 shadow-lg rounded-2xl w-full max-w-2xl p-6 mx-4 transition-all duration-300">
+
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-blue-600 dark:text-yellow-300">ℹ️ Tentang Aplikasi</h1>
+            <button id="toggle-dark" class="text-sm hover:underline text-gray-600 dark:text-yellow-300">
+                🌙 Dark Mode
+            </button>
+        </div>
+        <!-- End Header -->
+
+        <!-- Isi -->
+        <p class="mb-4 leading-relaxed text-justify">
+            Aplikasi ini dikembangkan sebagai bagian dari <strong>Capstone Project</strong> dalam program
+            <strong>Student Developer Initiative</strong> oleh
+            <span class="text-blue-600 dark:text-yellow-300 font-semibold">Hacktiv8</span> dan
+            <span class="text-blue-600 dark:text-yellow-300 font-semibold">IBM</span>.
+        </p>
+
+        <h2 class="text-xl font-semibold mb-2">Teknologi Digunakan</h2>
+        <ul class="list-disc list-inside mb-4 space-y-1">
+            <li>HTML5, Tailwind CSS</li>
+            <li>JavaScript Vanilla</li>
+            <li>localStorage</li>
+        </ul>
+
+        <h2 class="text-xl font-semibold mb-2">Dukungan AI</h2>
+        <p class="mb-4 leading-relaxed">
+            Proyek ini juga memanfaatkan <strong>IBM Granite AI</strong> dalam membantu penulisan kode CRUD, desain UI,
+            dan dokumentasi.
+        </p>
+        <!-- End Isi -->
+
+        <!-- Tombol -->
+        <div class="text-center mt-6">
+            <a href="index.html"
+                class="inline-block px-6 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-yellow-500 dark:hover:bg-yellow-600 text-white dark:text-gray-900 font-semibold rounded-xl transition">
+                ← Kembali ke Aplikasi
+            </a>
+        </div>
+        <!-- End Tombol -->
+    </main>
+    <!-- End container -->
+
+    <!-- Script Toggle Dark Mode -->
+    <script>
+        const toggleBtn = document.getElementById('toggle-dark');
+
+        toggleBtn.onclick = () => {
+            const root = document.documentElement;
+            root.classList.toggle('dark');
+            const isDark = root.classList.contains('dark');
+            toggleBtn.innerHTML = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+            localStorage.setItem('darkMode', isDark);
+        };
+
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.documentElement.classList.add('dark');
+            toggleBtn.innerHTML = '☀️ Light Mode';
+        }
+    </script>
+</body>
+
+</html>
